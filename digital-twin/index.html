@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#060a17" />
+    <title>ANODOS · Smart Elevator Digital Twin & Predictive Maintenance</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <!-- ══════════════════ TOP BAR ══════════════════ -->
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="3" width="14" height="18" rx="2" />
+              <path d="M16 3v18M11 21v8M21 21v8" />
+              <path d="M13 8.5l3-2.5 3 2.5M13 15.5l3 2.5 3-2.5" />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <strong>ANODOS</strong>
+            <small>Elevator Operations & AI Twin</small>
+          </span>
+        </div>
+
+        <div class="topbar-stats" id="topbar-stats" aria-label="System summary"></div>
+
+        <div class="topbar-actions">
+          <div class="source-toggle" role="group" aria-label="Data source">
+            <button type="button" class="source-btn" data-source="mock">MOCK</button>
+            <button type="button" class="source-btn is-active" data-source="backend">BACKEND</button>
+          </div>
+          <button type="button" class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+            <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <span class="conn-badge" id="conn-badge" data-state="idle">
+            <i class="dot"></i><span id="conn-badge-text">Initialising</span>
+          </span>
+        </div>
+      </header>
+
+      <!-- ══════════════════ TOP NAVIGATION TABS ══════════════════ -->
+      <nav class="nav-bar" role="tablist" aria-label="Dashboard sections">
+        <button type="button" class="nav-tab is-active" data-tab="overview" role="tab">Overview</button>
+        <button type="button" class="nav-tab" data-tab="digital-twin" role="tab">Digital Twin</button>
+        <button type="button" class="nav-tab" data-tab="ai-prediction" role="tab">AI Prediction</button>
+        <button type="button" class="nav-tab" data-tab="telemetry" role="tab">Live Telemetry</button>
+        <button type="button" class="nav-tab" data-tab="simulation" role="tab">Simulation</button>
+        <button type="button" class="nav-tab" data-tab="maintenance" role="tab">Maintenance</button>
+        <button type="button" class="nav-tab" data-tab="dataset" role="tab">Dataset / Batch</button>
+      </nav>
+
+      <!-- ══════════════════ MAIN SECTION PAGES ══════════════════ -->
+      <main class="main-body">
+        <!-- 1. OVERVIEW PAGE -->
+        <section class="page-panel" id="page-overview" data-page="overview"></section>
+
+        <!-- 2. DIGITAL TWIN PAGE -->
+        <section class="page-panel hidden" id="page-digital-twin" data-page="digital-twin">
+          <div class="layout twin-layout">
+            <!-- 3D STAGE -->
+            <section class="stage-panel">
+              <div class="panel-head">
+                <h2 id="stage-title">Digital Twin · Unit E001</h2>
+                <div class="view-buttons">
+                  <button type="button" class="btn btn-ghost" data-view="reset" title="Reset camera">
+                    <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2 2.5V6h3.5"/></svg>
+                    Reset View
+                  </button>
+                  <button type="button" class="btn btn-ghost" data-view="top">
+                    <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 5.5 8 2l6 3.5-6 3.5-6-3.5ZM2 10.5 8 14l6-3.5"/></svg>
+                    Top View
+                  </button>
+                  <button type="button" class="btn btn-ghost" data-view="front">
+                    <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3.5" y="2" width="9" height="12" rx="1.5"/><path d="M6.5 6h3"/></svg>
+                    Front View
+                  </button>
+                  <button type="button" class="btn btn-ghost" data-view="side">
+                    <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="2" width="8" height="12" rx="1"/></svg>
+                    Side View
+                  </button>
+                </div>
+              </div>
+
+              <div class="viewport" id="viewport">
+                <canvas id="twin-canvas"></canvas>
+
+                <!-- Status overlays -->
+                <div class="overlay" id="loading-overlay">
+                  <span class="spinner" aria-hidden="true"></span>
+                  <p id="loading-text">Building 3D Digital Twin…</p>
+                </div>
+
+                <div class="overlay overlay-error hidden" id="error-overlay">
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><path d="M10.3 3.2 2.5 17a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/></svg>
+                  <p id="error-text">Something went wrong.</p>
+                  <button type="button" class="btn btn-ghost" id="error-retry">Retry</button>
+                </div>
+
+                <div class="incident-badge hidden" id="incident-badge">
+                  <i class="incident-dot"></i>
+                  <span id="incident-text">INCIDENT DETECTED · TRACTION MOTOR</span>
+                </div>
+
+                <div class="model-badge" id="model-badge">3D Procedural Model</div>
+
+                <div class="live-telemetry-overlay" id="twin-live-overlay">
+                  <span>Floor: <strong>07</strong></span>
+                  <span>Dir: <strong>UP</strong></span>
+                  <span>Speed: <strong id="overlay-speed">2.5 m/s</strong></span>
+                  <span>Load: <strong id="overlay-load">650 kg</strong></span>
+                </div>
+
+                <div class="viewport-hint">
+                  Drag · orbit &nbsp;|&nbsp; Scroll · zoom &nbsp;|&nbsp; Click · inspect component
+                </div>
+              </div>
+
+              <div class="stage-foot" id="stage-foot"></div>
+            </section>
+
+            <!-- SIDE INSPECTOR PANEL -->
+            <aside class="sidebar" id="panel-inspector"></aside>
+          </div>
+        </section>
+
+        <!-- 3. AI PREDICTION PAGE -->
+        <section class="page-panel hidden" id="page-ai-prediction" data-page="ai-prediction"></section>
+
+        <!-- 4. LIVE TELEMETRY PAGE -->
+        <section class="page-panel hidden" id="page-telemetry" data-page="telemetry"></section>
+
+        <!-- 5. SIMULATION PAGE -->
+        <section class="page-panel hidden" id="page-simulation" data-page="simulation"></section>
+
+        <!-- 6. MAINTENANCE PAGE -->
+        <section class="page-panel hidden" id="page-maintenance" data-page="maintenance"></section>
+
+        <!-- 7. DATASET PAGE -->
+        <section class="page-panel hidden" id="page-dataset" data-page="dataset"></section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
