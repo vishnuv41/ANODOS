@@ -1,20 +1,91 @@
-# ANODOS — Combined Project Package
+# ANODOS — AI-Powered Predictive Maintenance
 
-```
-ANODOS_Project/
-├── docs/
-│   ├── ANODOS_Backend___Complete_Project_Report.txt   # full backend report
-│   ├── ANODOS_Team_Handoff_Document.docx              # team handoff / integration contracts
-│   ├── ANODOS_demo_script.md                          # 8-step live demo script
-│   └── ANODOS_Progress_Summary.md                     # current progress + remaining work
-├── data/
-│   ├── ANODOS_MASTER_DATASET.csv                      # 100,000 rows x 66 cols (simulated)
-│   └── ANODOS_MASTER_DATASET.xlsx                     # same dataset, Excel format
-└── digital-twin/                                      # Person 2's 3D Digital Twin (Vite + JS)
-    ├── src/  dist/  scripts/  index.html  package.json ...
-    └── anodos-digital-twin/INTEGRATION_CONTRACT.md    # /state + /ws integration contract
+ANODOS is a predictive maintenance project for elevator monitoring, AI-assisted fault prediction, and digital-twin visualization. It combines a FastAPI backend, AI model adapters, and web-based interfaces.
+
+## Project Structure
+
+```text
+ANODOS/
+├── ai/                         # AI adapters and model integration
+│   └── model/                  # CatBoost and demo adapters
+├── backend/                    # FastAPI backend
+├── data/                       # Datasets and prediction outputs
+├── digital-twin/               # Vite + Three.js digital twin
+│   └── anodos-digital-twin/    # Integration contract
+├── anodos-ui-kit/
+│   └── anodos-ui/              # Next.js frontend
+├── requirements.txt            # Python dependencies
+└── README.md
 ```
 
-Notes
-- The dataset is simulated (public/reference data + MATLAB augmentation) — never present it as real KONE data.
-- `node_modules/` was left out of `digital-twin/`; run `npm install` inside that folder, then `npm run dev`.
+## Prerequisites
+
+- Python 3.10 or a compatible Python version
+- Node.js and npm
+- Git
+
+## Backend Setup
+
+From the project root, create and activate a virtual environment.
+
+### Windows
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn backend.main:app --reload
+```
+
+The API should be available at `http://127.0.0.1:8000`.
+
+Interactive API documentation is available at `http://127.0.0.1:8000/docs`.
+
+## Run the Digital Twin
+
+Open a separate terminal:
+
+```powershell
+cd digital-twin
+npm install
+npm run dev
+```
+
+Use the local URL printed by Vite to open the application.
+
+## Run the Next.js Frontend
+
+Open another terminal:
+
+```powershell
+cd anodos-ui-kit/anodos-ui
+npm install
+npm run dev
+```
+
+Use the local URL printed by Next.js to open the frontend.
+
+## AI Model and Data
+
+The `ai/` directory contains the model adapters and AI integration code. The `data/` directory contains datasets and prediction outputs.
+
+**Dataset notice:** Verify the origin and documentation of each dataset before interpreting or presenting its results. Do not describe simulated data as real operational elevator data.
+
+## Development Notes
+
+- Install dependencies separately for each Node.js application.
+- Keep environment variables and credentials out of version control.
+- Check the digital-twin integration contract when connecting the frontend to the backend.
+- Test API endpoints and frontend integration before deploying changes.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a branch for your change.
+3. Make a focused improvement and test it.
+4. Commit your changes and push the branch to your fork.
+5. Open a pull request describing the change and its verification.
+
+## License
+
+Check the repository for license information before reusing or redistributing this project.
